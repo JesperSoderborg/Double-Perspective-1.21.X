@@ -1,5 +1,6 @@
 package net.laisvall.doubleperspective;
 
+import net.laisvall.doubleperspective.client.WaypointRenderer;
 import net.laisvall.doubleperspective.util.PlayerEntityDataSaver;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
@@ -31,6 +32,8 @@ public class DoublePerspectiveClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
+        WaypointRenderer.init();
+
         switchKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
                 "Switch Perspective",
                 InputUtil.Type.KEYSYM,
@@ -43,6 +46,7 @@ public class DoublePerspectiveClient implements ClientModInitializer {
                 GLFW.GLFW_KEY_F7,
                 "Double Perspective"
         ));
+
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             if (client.player != null && client.options != null) {
                 client.options.hudHidden = playerLocked;
