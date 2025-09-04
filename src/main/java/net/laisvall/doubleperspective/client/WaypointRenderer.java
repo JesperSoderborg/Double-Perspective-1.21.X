@@ -5,63 +5,51 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.render.Camera;
 import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.render.WorldRenderer;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.EulerAngle;
 import net.minecraft.util.math.Vec3d;
 import org.joml.Quaternionf;
 
 public class WaypointRenderer {
-
-    /**
-     * Registers the render callback. Call this once during client initialization.
-     */
     public static void init() {
         WorldRenderEvents.LAST.register(context -> {
-            MatrixStack matrices = context.matrixStack();
-            VertexConsumerProvider vertexConsumers = context.consumers();
-
-            drawText("Hello Billboard1!", 0, 100, 0, 0.02f, 0xFFFFFF, true, matrices, vertexConsumers);
-            drawText("Hello Billboard2!", 0, 103, 0, 0.005f, 0xFF0000, true, matrices, vertexConsumers);
-            drawText("Hello Billboard3!", 0, 106, 0, 0.1f, 0x00FFFF, false, matrices, vertexConsumers);
+            renderAll(context.matrixStack(), context.consumers(), context.camera(), context.worldRenderer());
         });
     }
 
-    /**
-     * Draws floating text in the world, facing the player.
-     *
-     * @param textStr The string to render.
-     * @param x       World X coordinate
-     * @param y       World Y coordinate
-     * @param z       World Z coordinate
-     * @param scale   Text scale
-     * @param color   Text color (0xFFFFFF)
-     * @param shadow  Draw shadow
-     * @param matrices MatrixStack from the render event
-     * @param vertexConsumers VertexConsumerProvider from the render event
-     */
-    public static void drawText(String textStr, int x, int y, int z, float scale, int color, boolean shadow, MatrixStack matrices, VertexConsumerProvider vertexConsumers) {
-        MinecraftClient client = MinecraftClient.getInstance();
-        Camera camera = client.gameRenderer.getCamera();
-        Vec3d camPos = camera.getPos();
+    public static void renderAll(MatrixStack matrices, VertexConsumerProvider vertexConsumers, Camera camera, WorldRenderer worldRenderer) {
 
         matrices.push();
 
-        // Translate to world position relative to camera
-        BlockPos blockPos = new BlockPos(x, y, z);
-        Vec3d centerPos = Vec3d.ofCenter(blockPos);
-        matrices.translate(centerPos.x - camPos.x, centerPos.y - camPos.y, centerPos.z - camPos.z);
+        Vec3d camPos = camera.getPos();
+        matrices.translate(-camPos.x, -camPos.y, -camPos.z);
+
+        drawText("Hello Billboard1!", 0, 100, 0, 0.02f, 0xFFFFFF, true, matrices, vertexConsumers, camera);
+        drawText("Hello Billboard2!", 0, 103, 0, 0.005f, 0xFF0000, true, matrices, vertexConsumers, camera);
+        drawText("Hello Billboard3!", 0, 106, 0, 0.1f, 0x00FFFF, false, matrices, vertexConsumers, camera);
+
+        matrices.pop();
+    }
+
+    public static void drawText(String text, int x, int y, int z, float scale, int color, boolean shadow, MatrixStack matrices, VertexConsumerProvider vertexConsumers, Camera camera) {
+        TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
+
+        matrices.push();
+
+        // Translate to world position
+        Vec3d centerPos = Vec3d.ofCenter(new BlockPos(x, y, z));
+        matrices.translate(centerPos.x, centerPos.y, centerPos.z);
 
         // Rotate to face camera
-        // Quaternionf camRotation = camera.getRotation();
-        // matrices.multiply(camRotation);
+        Quaternionf camRotation = new Quaternionf()
+                .rotateY((float)Math.toRadians(-camera.getYaw()))
+                .rotateX((float)Math.toRadians(camera.getPitch()));
+        matrices.multiply(camRotation);
 
         // Scale text
         matrices.scale(-scale, -scale, scale);
 
-        TextRenderer textRenderer = client.textRenderer;
-        Text text = Text.of(textStr);
         int textWidth = textRenderer.getWidth(text);
         float offsetX = -textWidth / 2f;
 
