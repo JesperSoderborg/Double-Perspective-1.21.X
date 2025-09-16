@@ -1,4 +1,4 @@
-package net.laisvall.doubleperspective.util;
+package net.laisvall.doubleperspective.data;
 
 import net.minecraft.util.math.Vec3d;
 

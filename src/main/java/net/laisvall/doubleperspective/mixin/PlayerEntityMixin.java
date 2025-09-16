@@ -1,7 +1,7 @@
 package net.laisvall.doubleperspective.mixin;
 
 import net.laisvall.doubleperspective.DoublePerspectiveClient;
-import net.laisvall.doubleperspective.util.PlayerEntityDataSaver;
+import net.laisvall.doubleperspective.data.PlayerEntityDataSaver;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.Vec3d;
 import org.spongepowered.asm.mixin.Mixin;

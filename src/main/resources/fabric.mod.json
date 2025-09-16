@@ -18,9 +18,6 @@
 		"main": [
 			"net.laisvall.doubleperspective.DoublePerspective"
 		],
-		"fabric-datagen": [
-			"net.laisvall.doubleperspective.DoublePerspectiveDataGenerator"
-		],
         "client": [
           "net.laisvall.doubleperspective.DoublePerspectiveClient"
         ]

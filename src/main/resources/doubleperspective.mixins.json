@@ -3,13 +3,13 @@
   "package": "net.laisvall.doubleperspective.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
-    "PlayerEntityMixin",
-    "MouseMixin"
+    "MouseMixin",
+    "PlayerEntityMixin"
   ],
   "injectors": {
     "defaultRequire": 1
   },
   "overwrites": {
     "requireAnnotations": true
-	}
+  }
 }

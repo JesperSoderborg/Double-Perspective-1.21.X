@@ -14,7 +14,7 @@ import java.util.Objects;
 
 import static net.minecraft.client.render.VertexFormats.POSITION_COLOR;
 
-public class WaypointRenderer {
+public class PerspectiveWaypointRenderer {
     public static void init() {
         WorldRenderEvents.AFTER_TRANSLUCENT.register(context -> renderAll(Objects.requireNonNull(context.matrixStack()), context.consumers(), context.camera()));
     }
